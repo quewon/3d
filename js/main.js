@@ -1,5 +1,4 @@
-import {GLTFLoader} from './lib/GLTFLoader.js';
-import {FontLoader} from './lib/fontloader/FontLoader.js';
+import * as THREE from './three.module.js';
 
 //config
 var resmodifier = 0.4; //resolution modifier
@@ -120,10 +119,15 @@ function init() {
   }
 
   //player controls
-  document.onkeydown = document.onkeyup = function(e) {
+  window.onkeydown = window.onkeyup = function(e) {
     e = e || event; // to deal with IE
     map[e.keyCode] = e.type == 'keydown';
-  }
+  };
+  window.onblur = function() {
+    for (var i in map) {
+      map[i] = false;
+    }
+  };
 
   createTestroom();
 
