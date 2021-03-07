@@ -1,4 +1,22 @@
 import * as THREE from './three.module.js';
+import {GLTFLoader} from './GLTFLoader.js';
+
+
+let container;
+
+let width, height;
+let camera, scene, renderer;
+let pScene, pCamera, pTexture, materialScreen;
+let gltfloader, fontloader;
+
+let keymap = {};
+
+let vector = new THREE.Vector3();
+
+
+
+
+
 
 //config
 var resmodifier = 0.4; //resolution modifier
@@ -9,11 +27,6 @@ window.addEventListener('load', function() {
   init();
 });
 
-let width, height, container;
-let camera, renderer, loader, fontloader, scene;
-let pScene, pCamera, pTexture, materialScreen;
-let map = {};
-let vector = new THREE.Vector3();
 //setup
 function init() {
   width = window.innerWidth;
@@ -43,7 +56,7 @@ function init() {
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   container.appendChild(renderer.domElement);
 
-  loader = new GLTFLoader();
+  gltfloader = new GLTFLoader();
 
   fontloader = new THREE.FontLoader();
 
@@ -121,11 +134,11 @@ function init() {
   //player controls
   window.onkeydown = window.onkeyup = function(e) {
     e = e || event; // to deal with IE
-    map[e.keyCode] = e.type == 'keydown';
+    keymap[e.keyCode] = e.type == 'keydown';
   };
   window.onblur = function() {
-    for (var i in map) {
-      map[i] = false;
+    for (var i in keymap) {
+      keymap[i] = false;
     }
   };
 
@@ -170,8 +183,8 @@ function createPlayer() {
 var frame = 0;
 function animate() {
 
-  for (var i in map) {
-    if (map[i]) {
+  for (var i in keymap) {
+    if (keymap[i]) {
       key(i)
     }
   }
@@ -247,7 +260,7 @@ function createTestroom() {
 
   //scene.add(new THREE.CameraHelper(light.shadow.camera))
 
-  loader.load('models/person.gltf', function(gltf) {
+  gltfloader.load('models/person.gltf', function(gltf) {
     let material = new THREE.MeshToonMaterial({color: 0xffffff});
     gltf.scene.children[3].material = material;
     gltf.scene.children[2].material = material;
